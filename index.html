@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Researcher | IIIT-H</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Space Mono (Code) & Inter (Readability) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Custom Tailwind Configuration for Neon Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    colors: {
+                        'neon-blue': '#00f3ff',
+                        'neon-purple': '#bc13fe',
+                        'deep-bg': '#050505',
+                        'glass': 'rgba(255, 255, 255, 0.03)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #e5e5e5;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-panel:hover {
+            border-color: rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.05);
+        }
+
+        /* Glitch Effect for Title on Hover */
+        .glitch-hover:hover {
+            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+            color: #00f3ff;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        /* Background Grid */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- Data ---
+
+        const PROFILE = {
+            name: "AKASH",
+            role: "AI Researcher & Engineer",
+            lab: "IIIT-Hyderabad",
+            tagline: "I like to work in both academia and industry as I find it convenient to bridge theoretical research with real-world applications.",
+            about: "I am a PhD Scholar specializing in Computer Vision at IIIT-Hyderabad. I Work on Deep Learning Computer vision, Embodied AI and Multi-Modal solutions. My journey is defined by a duality: distinct professional experience as a Deep Learning Engineer building robust pipelines, and rigorous academic research pushing the boundaries of what machines can see. I thrive at the intersection of industry application and novel research.",
+            email: "manna.phys@gmail.com",
+            github: "https://github.com/MlLearnerAkash",
+            twitter: "https://twitter.com/demo",
+            linkedin: "https://www.linkedin.com/in/akash-manna-5b8669205/",
+            medium: "https://medium.com/@manna-phys",
+            scholar: "https://scholar.google.com/citations?user=demo",
+            profileImage: "profile.jpg",
+            cvPath: "/cv/path/pdf"
+        };
+
+        const NEWS = [
+            {
+                id: 1,
+                date: "Aug 2025",
+                content: "Paper accepted at ICVGIP 2025! 🎉"
+            },
+            // {
+            //     id: 2,
+            //     date: "Nov 2024",
+            //     content: "Invited talk at AI Research Summit on Neural Rendering"
+            // },
+            // {
+            //     id: 3,
+            //     date: "Oct 2024",
+            //     content: "Released open-source implementation of our WACV paper"
+            // },
+            // {
+            //     id: 4,
+            //     date: "Sep 2024",
+            //     content: "Started collaboration with Meta AI on 3D reconstruction"
+            // }
+        ];
+
+        const EXPERIENCE = [
+            {
+                id: 1,
+                role: "PhD Researcher",
+                org: "IIIT-Hyderabad",
+                type: "academic",
+                period: "2025 - Present",
+                desc: "Conducting research in OCR, Embodies AI, and Multi-Modal RAG. Publishing in top-tier conferences (CVPR/ICCV)."
+            },
+            {
+                id: 2,
+                role: "Deep Learning Engineer",
+                org: "Pravaig Dynamics",
+                type: "industry",
+                period: "2023 - 2024",
+                desc: "Led a team of 5 people on Research and Development of ADAS-2 system for Indian Roads to deploy on edge device with model optimization"
+            },
+            {
+                id: 3,
+                role: "Computer Vision Engineer",
+                org: "EmageVision",
+                type: "industry",
+                period: "2022-2023",
+                desc: "Developed Production-grade Computer vision systems for unsupervised Anamaly detection that boosts the production performce by 7x."
+            }
+        ];
+
+        const PUBLICATIONS = [
+            {
+                id: 1,
+                title: "Label-Free Adaptation of Indic Printed OCR",
+                conf: "ICVGIP 2025",
+                authors: "<strong>Akash Manna</strong>, Radha Krishna Deshpande, Ajay Mondal, C.V. Jawahar",
+                year: 2024,
+                bibtex: "@inproceedings{name2024efficient, title={Efficient 3D Scene Reconstruction}, author={Name, Your}, booktitle={CVPR}, year={2024}}"
+            },
+            // {
+            //     id: 2,
+            //     title: "Robust Object Tracking in Low-Light Conditions",
+            //     conf: "WACV 2023",
+            //     authors: "Your Name, Senior Engineer",
+            //     year: 2023,
+            //     bibtex: "@inproceedings{name2023robust, title={Robust Object Tracking}, author={Name, Your}, booktitle={WACV}, year={2023}}"
+            // }
+        ];
+
+        const TECHNOLOGIES = [
+            "PyTorch", "TensorFlow", "OpenCV", "Transformers", "CUDA", "TensorRT", 
+            "Triton", "Docker", "AWS", "Git", "FastAPI", "Gradio"
+        ];
+
+        const SKILLS = [
+            "Computer Vision", "Deep Learning", "Multi-Modal AI", "OCR Systems",
+            "ADAS Development", "Model Optimization", "RAG Systems", "Research & Development"
+        ];
+
+        // --- Components ---
+
+        const Icon = ({ name, size = 20, className }) => {
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            });
+
+            return <i data-lucide={name} width={size} height={size} className={className}></i>;
+        };
+
+        const SectionHeader = ({ title, number }) => (
+            <div className="flex items-center gap-4 mb-12">
+                <span className="font-mono text-neon-blue text-lg">0{number}.</span>
+                <h2 className="text-3xl font-bold tracking-tight text-white">{title}</h2>
+                <div className="h-px bg-gray-800 flex-grow max-w-xs"></div>
+            </div>
+        );
+
+        const Navbar = () => (
+            <nav className="fixed top-0 w-full z-50 bg-deep-bg/80 backdrop-blur-md border-b border-white/5">
+                <div className="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+                    <div className="font-mono font-bold text-xl tracking-tighter cursor-pointer glitch-hover">
+                        {`<${PROFILE.name.split(' ')[0]} />`}
+                    </div>
+                    <div className="hidden md:flex gap-8 font-mono text-sm text-gray-400">
+                        <a href="#about" className="hover:text-neon-blue transition-colors">/ABOUT</a>
+                        <a href="#news" className="hover:text-neon-blue transition-colors">/NEWS</a>
+                        <a href="#experience" className="hover:text-neon-blue transition-colors">/EXPERIENCE</a>
+                        <a href="#research" className="hover:text-neon-blue transition-colors">/RESEARCH</a>
+                        <a href="#cv" className="hover:text-neon-blue transition-colors">/CV</a>
+                    </div>
+                    <a href="#contact" className="font-mono text-xs border border-neon-blue/30 px-4 py-2 rounded text-neon-blue hover:bg-neon-blue/10 transition-colors">
+                        GET IN TOUCH
+                    </a>
+                </div>
+            </nav>
+        );
+
+        const Hero = () => (
+            <section className="min-h-screen flex flex-col justify-center px-6 max-w-6xl mx-auto pt-20">
+                <p className="font-mono text-neon-blue mb-4">Hi, my name is</p>
+                <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
+                    {PROFILE.name}.
+                </h1>
+                <h2 className="text-4xl md:text-6xl font-bold text-gray-400 mb-8">
+                    I build things for <span className="text-white">Vision.</span>
+                </h2>
+                <p className="max-w-xl text-gray-400 leading-relaxed mb-12 text-lg">
+                    {PROFILE.tagline}
+                </p>
+                
+                <div className="flex gap-4">
+                     <a href="#research" className="px-8 py-4 bg-transparent border border-neon-blue text-neon-blue font-mono text-sm rounded hover:bg-neon-blue/10 transition-all">
+                        View Publications
+                    </a>
+                     <a href="#experience" className="px-8 py-4 bg-white/5 border border-white/10 text-white font-mono text-sm rounded hover:bg-white/10 transition-all">
+                        Check Experience
+                    </a>
+                     <a href="#contact" className="px-8 py-4 bg-white/5 border border-white/10 text-white font-mono text-sm rounded hover:bg-white/10 transition-all">
+                        Contact Me
+                    </a>
+                </div>
+            </section>
+        );
+
+        const About = () => (
+            <section id="about" className="py-24 px-6 max-w-4xl mx-auto">
+                <SectionHeader title="About Me" number="1" />
+                <div className="grid md:grid-cols-3 gap-12">
+                    <div className="md:col-span-2 text-gray-400 leading-relaxed">
+                        <p className="mb-6">
+                            {PROFILE.about}
+                        </p>
+                        <p className="mb-8">
+                            I don't just write papers; I build <span className="text-neon-blue">solutions with real-world impact</span>. 
+                            Having worked as a Deep Learning Engineer, I understand the constraints of deployment, data pipelines, and real-world noise.
+                        </p>
+                        
+                        {/* Technologies Section */}
+                        <div className="mb-8">
+                            <p className="font-mono text-sm text-white mb-4">Technologies:</p>
+                            <ul className="grid grid-cols-2 gap-2 font-mono text-xs text-gray-500">
+                                {TECHNOLOGIES.map(tech => (
+                                    <li key={tech} className="flex items-center gap-2">
+                                        <span className="text-neon-blue">▹</span> {tech}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Skills Section */}
+                        <div>
+                            <p className="font-mono text-sm text-white mb-4">Skills:</p>
+                            <ul className="grid grid-cols-2 gap-2 font-mono text-xs text-gray-500">
+                                {SKILLS.map(skill => (
+                                    <li key={skill} className="flex items-center gap-2">
+                                        <span className="text-neon-purple">▹</span> {skill}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="relative group">
+                        <div className="relative h-34 w-full bg-gray-800 rounded overflow-hidden border-2 border-neon-blue grayscale hover:grayscale-0 transition-all duration-500 hover:shadow-[0_0_20px_rgba(0,243,255,0.3)]">
+                            <img 
+                                src={PROFILE.profileImage}
+                                alt="Profile" 
+                                className="object-cover w-full h-full"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const News = () => (
+            <section id="news" className="py-24 px-6 max-w-4xl mx-auto">
+                <SectionHeader title="Latest Updates" number="2" />
+                <div className="glass-panel p-8 rounded-lg">
+                    <div className="space-y-6">
+                        {NEWS.map(item => (
+                            <div key={item.id} className="flex gap-6 items-start group">
+                                <span className="font-mono text-xs text-neon-purple min-w-[80px] mt-1">
+                                    {item.date}
+                                </span>
+                                <div className="flex-1">
+                                    <p className="text-gray-300 group-hover:text-white transition-colors">
+                                        {item.content}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Experience = () => {
+            const [filter, setFilter] = useState('all'); // all, industry, academic
+
+            const filteredData = EXPERIENCE.filter(item => 
+                filter === 'all' ? true : item.type === filter
+            );
+
+            return (
+                <section id="experience" className="py-24 px-6 max-w-4xl mx-auto">
+                    <SectionHeader title="Where I've Worked" number="3" />
+                    
+                    <div className="flex gap-4 mb-10 font-mono text-xs">
+                        {['all', 'industry', 'academic'].map(type => (
+                            <button 
+                                key={type}
+                                onClick={() => setFilter(type)}
+                                className={`px-4 py-2 rounded uppercase border transition-all ${
+                                    filter === type 
+                                    ? 'border-neon-blue text-neon-blue bg-neon-blue/5' 
+                                    : 'border-gray-800 text-gray-500 hover:border-gray-600'
+                                }`}
+                            >
+                                {type}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="relative border-l border-gray-800 ml-3 space-y-12">
+                        {filteredData.map((item, idx) => (
+                            <div key={item.id} className="relative pl-8 md:pl-12 group">
+                                {/* Dot on timeline */}
+                                <div className={`absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full border-2 bg-deep-bg transition-colors ${
+                                    item.type === 'academic' ? 'border-neon-purple group-hover:bg-neon-purple' : 'border-neon-blue group-hover:bg-neon-blue'
+                                }`}></div>
+                                
+                                <div className="glass-panel p-6 rounded-lg transition-all">
+                                    <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                        <div>
+                                            <h3 className="text-xl font-bold text-gray-200">{item.role}</h3>
+                                            <p className={`font-mono text-sm ${item.type === 'academic' ? 'text-neon-purple' : 'text-neon-blue'}`}>
+                                                @ {item.org}
+                                            </p>
+                                        </div>
+                                        <span className="font-mono text-xs text-gray-500 mt-1 md:mt-0">{item.period}</span>
+                                    </div>
+                                    <p className="text-gray-400 text-sm leading-relaxed mt-4">
+                                        {item.desc}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        const Research = () => {
+            const copyBibtex = (text, id) => {
+                navigator.clipboard.writeText(text);
+                const btn = document.getElementById(`btn-${id}`);
+                if(btn) {
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = `<span class="text-green-400">Copied!</span>`;
+                    setTimeout(() => btn.innerHTML = originalText, 2000);
+                }
+            };
+
+            return (
+                <section id="research" className="py-24 px-6 max-w-4xl mx-auto">
+                    <SectionHeader title="Publications" number="4" />
+                    
+                    <div className="grid gap-6">
+                        {PUBLICATIONS.map(pub => (
+                            <div key={pub.id} className="glass-panel p-6 md:p-8 rounded-lg group relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <Icon name="file-text" size={64} />
+                                </div>
+
+                                <div className="relative z-10">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <h3 className="text-xl font-bold text-gray-100 group-hover:text-neon-blue transition-colors">
+                                            {pub.title}
+                                        </h3>
+                                        <a href="#" className="text-gray-500 hover:text-white transition-colors">
+                                            <Icon name="external-link" size={18} />
+                                        </a>
+                                    </div>
+                                    
+                                    <p className="text-sm text-gray-400 mb-2" dangerouslySetInnerHTML={{ __html: pub.authors }}></p>
+                                    <div className="flex items-center gap-4 mb-6">
+                                        <span className="font-mono text-xs text-neon-purple border border-neon-purple/30 px-2 py-1 rounded">
+                                            {pub.conf}
+                                        </span>
+                                        <span className="font-mono text-xs text-gray-600">{pub.year}</span>
+                                    </div>
+
+                                    <div className="flex gap-3">
+                                        <button 
+                                            id={`btn-${pub.id}`}
+                                            onClick={() => copyBibtex(pub.bibtex, pub.id)}
+                                            className="flex items-center gap-2 text-xs font-mono border border-gray-700 hover:border-neon-blue hover:text-neon-blue px-4 py-2 rounded transition-all bg-deep-bg"
+                                        >
+                                            <Icon name="copy" size={12} /> Copy BibTeX
+                                        </button>
+                                        <button className="flex items-center gap-2 text-xs font-mono border border-gray-700 hover:bg-white hover:text-black hover:border-white px-4 py-2 rounded transition-all bg-deep-bg">
+                                            PDF
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        const CVSection = () => (
+        <section id="cv" className="py-24 px-6 max-w-4xl mx-auto">
+            <SectionHeader title="Curriculum Vitae" number="5" />
+            <div className="glass-panel p-8 md:p-12 rounded-lg text-center relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-neon-blue to-neon-purple"></div>
+                <h3 className="text-2xl font-bold text-white mb-4">Looking for the full story?</h3>
+                <p className="text-gray-400 mb-8 max-w-xl mx-auto leading-relaxed">
+                    Download my full resume to see detailed project breakdowns, academic history, patent details, and a complete technical skills matrix.
+                </p>
+                <a 
+                    href={PROFILE.cvPath} 
+                    download="akash_cv_phd.pdf"
+                    className="px-8 py-4 bg-neon-blue text-black font-bold font-mono rounded hover:bg-white transition-colors flex items-center gap-2 mx-auto w-fit"
+                >
+                    <Icon name="download" size={20} /> DOWNLOAD CV
+                </a>
+            </div>
+        </section>
+    );
+
+        const Contact = () => (
+            <section id="contact" className="py-24 px-6 max-w-4xl mx-auto text-center">
+                <p className="font-mono text-neon-blue mb-4">06. What's Next?</p>
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Get In Touch</h2>
+                <p className="text-gray-400 max-w-xl mx-auto mb-12 text-lg">
+                    Whether you have a question about my research, want to collaborate on a project, or just want to say hi, my inbox is always open.
+                </p>
+                
+                <div className="flex justify-center flex-wrap gap-4 mb-12">
+                     <a href={PROFILE.linkedin} target="_blank" className="flex items-center gap-2 px-6 py-3 bg-gray-900 border border-gray-800 rounded hover:border-neon-blue hover:text-neon-blue transition-all group">
+                        <Icon name="linkedin" size={18} /> <span className="font-mono text-sm">LinkedIn</span>
+                     </a>
+                     <a href={PROFILE.github} target="_blank" className="flex items-center gap-2 px-6 py-3 bg-gray-900 border border-gray-800 rounded hover:border-neon-blue hover:text-neon-blue transition-all group">
+                        <Icon name="github" size={18} /> <span className="font-mono text-sm">GitHub</span>
+                     </a>
+                     <a href={PROFILE.twitter} target="_blank" className="flex items-center gap-2 px-6 py-3 bg-gray-900 border border-gray-800 rounded hover:border-neon-blue hover:text-neon-blue transition-all group">
+                        <Icon name="twitter" size={18} /> <span className="font-mono text-sm">Twitter</span>
+                     </a>
+                     <a href={PROFILE.scholar} target="_blank" className="flex items-center gap-2 px-6 py-3 bg-gray-900 border border-gray-800 rounded hover:border-neon-blue hover:text-neon-blue transition-all group">
+                        <Icon name="graduation-cap" size={18} /> <span className="font-mono text-sm">Scholar</span>
+                     </a>
+                     <a href={PROFILE.medium} target="_blank" className="flex items-center gap-2 px-6 py-3 bg-gray-900 border border-gray-800 rounded hover:border-neon-blue hover:text-neon-blue transition-all group">
+                        <Icon name="book-open" size={18} /> <span className="font-mono text-sm">Medium</span>
+                     </a>
+                </div>
+
+                <a href={`mailto:${PROFILE.email}`} className="inline-block px-8 py-4 border border-neon-blue text-neon-blue font-mono rounded hover:bg-neon-blue/10 transition-colors">
+                    Say Hello
+                </a>
+            </section>
+        );
+
+        const Footer = () => (
+            <footer className="py-8 text-center text-gray-600 font-mono text-xs border-t border-gray-900 bg-deep-bg">
+                <div className="mb-4">
+                     <a href="#" className="hover:text-neon-blue transition-colors">Back to Top</a>
+                </div>
+                <p>Designed & Built by {PROFILE.name}.</p>
+                <p className="mt-2 text-gray-800">React • Tailwind • Lucide</p>
+            </footer>
+        );
+
+        const App = () => {
+            return (
+                <div className="relative">
+                    <div className="bg-grid"></div>
+                    <Navbar />
+                    <main>
+                        <Hero />
+                        <About />
+                        <News />
+                        <Experience />
+                        <Research />
+                        <CVSection />
+                        <Contact />
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
