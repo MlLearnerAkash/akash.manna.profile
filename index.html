@@ -234,8 +234,8 @@
                     <div className="hidden md:flex gap-8 font-mono text-sm text-gray-400">
                         <a href="#about" className="hover:text-neon-blue transition-colors">/ABOUT</a>
                         <a href="#news" className="hover:text-neon-blue transition-colors">/NEWS</a>
-                        <a href="#experience" className="hover:text-neon-blue transition-colors">/EXPERIENCE</a>
                         <a href="#research" className="hover:text-neon-blue transition-colors">/RESEARCH</a>
+                        <a href="#experience" className="hover:text-neon-blue transition-colors">/EXPERIENCE</a>
                         <a href="#cv" className="hover:text-neon-blue transition-colors">/CV</a>
                     </div>
                     <a href="#contact" className="font-mono text-xs border border-neon-blue/30 px-4 py-2 rounded text-neon-blue hover:bg-neon-blue/10 transition-colors">
@@ -353,7 +353,7 @@
 
             return (
                 <section id="experience" className="py-24 px-6 max-w-4xl mx-auto">
-                    <SectionHeader title="Where I've Worked" number="3" />
+                    <SectionHeader title="Where I've Worked" number="4" />
                     
                     <div className="flex gap-4 mb-10 font-mono text-xs">
                         {['all', 'industry', 'academic'].map(type => (
@@ -413,7 +413,7 @@
 
             return (
                 <section id="research" className="py-24 px-6 max-w-4xl mx-auto">
-                    <SectionHeader title="Publications" number="4" />
+                    <SectionHeader title="Publications" number="3" />
                     
                     <div className="grid gap-6">
                         {PUBLICATIONS.map(pub => (
@@ -533,8 +533,8 @@
                         <Hero />
                         <About />
                         <News />
-                        <Experience />
                         <Research />
+                        <Experience />
                         <CVSection />
                         <Contact />
                     </main>
