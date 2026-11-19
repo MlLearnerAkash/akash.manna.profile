@@ -121,13 +121,13 @@
             role: "AI Researcher & Engineer",
             lab: "IIIT-Hyderabad",
             tagline: "I like to work in both academia and industry as I find it convenient to bridge theoretical research with real-world applications.",
-            about: "I am a PhD Scholar specializing in Computer Vision at IIIT-Hyderabad. I Work on Deep Learning Computer vision, Embodied AI and Multi-Modal solutions. My journey is defined by a duality: distinct professional experience as a Deep Learning Engineer building robust pipelines, and rigorous academic research pushing the boundaries of what machines can see. I thrive at the intersection of industry application and novel research.",
+            about: "I am a PhD Scholar specializing in Computer Vision at IIIT-Hyderabad. I work on Deep Learning, Computer Vision, Embodied AI, and Multi-Modal solutions. My journey is defined by a duality: distinct professional experience as a Deep Learning Engineer building robust pipelines, and rigorous academic research pushing the boundaries of what machines can see. I thrive at the intersection of industry application and novel research.",
             email: "manna.phys@gmail.com",
             github: "https://github.com/MlLearnerAkash",
             twitter: "https://twitter.com/demo",
             linkedin: "https://www.linkedin.com/in/akash-manna-5b8669205/",
             medium: "https://medium.com/@manna-phys",
-            scholar: "https://scholar.google.com/citations?user=demo",
+            scholar: "https://scholar.google.com/citations?user=EVtGyNQAAAAJ&hl=en",
             profileImage: "profile.jpg",
             cvPath: "akash_cv_phd.pdf"
         };
@@ -135,24 +135,14 @@
         const NEWS = [
             {
                 id: 1,
-                date: "Aug 2025",
-                content: "Paper accepted at ICVGIP 2025! 🎉"
+                date: "Oct 2026",
+                content: "New preprint on arXiv: 'Reading Beyond OCR Noise: Robust Cross-Lingual RAG for Legislative Archives'."
             },
-            // {
-            //     id: 2,
-            //     date: "Nov 2024",
-            //     content: "Invited talk at AI Research Summit on Neural Rendering"
-            // },
-            // {
-            //     id: 3,
-            //     date: "Oct 2024",
-            //     content: "Released open-source implementation of our WACV paper"
-            // },
-            // {
-            //     id: 4,
-            //     date: "Sep 2024",
-            //     content: "Started collaboration with Meta AI on 3D reconstruction"
-            // }
+            {
+                id: 2,
+                date: "Aug 2025",
+                content: "Paper accepted at ICVGIP 2025 — 'Label-Free Adaptation of Indic Printed OCR'."
+            }
         ];
 
         const EXPERIENCE = [
@@ -185,20 +175,24 @@
         const PUBLICATIONS = [
             {
                 id: 1,
+                title: "Reading Beyond OCR Noise: Robust Cross-Lingual RAG for Legislative Archives",
+                conf: "arXiv preprint",
+                authors: "Radha Krishna Deshpande, Ajoy Mondal, <strong>Akash Manna</strong>, C. V. Jawahar",
+                year: 2026,
+                link: "https://arxiv.org/abs/2610.35240",
+                pdf: "https://arxiv.org/pdf/2610.35240",
+                bibtex: "@article{deshpande2026reading,\\n  title={Reading Beyond OCR Noise: Robust Cross-Lingual RAG for Legislative Archives},\\n  author={Deshpande, Radha Krishna and Mondal, Ajoy and Manna, Akash and Jawahar, C. V.},\\n  journal={arXiv preprint arXiv:2610.35240},\\n  year={2026}\\n}"
+            },
+            {
+                id: 2,
                 title: "Label-Free Adaptation of Indic Printed OCR",
                 conf: "ICVGIP 2025",
-                authors: "<strong>Akash Manna</strong>, Radha Krishna Deshpande, Ajay Mondal, C.V. Jawahar",
-                year: 2024,
-                bibtex: "@inproceedings{name2024efficient, title={Efficient 3D Scene Reconstruction}, author={Name, Your}, booktitle={CVPR}, year={2024}}"
-            },
-            // {
-            //     id: 2,
-            //     title: "Robust Object Tracking in Low-Light Conditions",
-            //     conf: "WACV 2023",
-            //     authors: "Your Name, Senior Engineer",
-            //     year: 2023,
-            //     bibtex: "@inproceedings{name2023robust, title={Robust Object Tracking}, author={Name, Your}, booktitle={WACV}, year={2023}}"
-            // }
+                authors: "<strong>Akash Manna</strong>, Radha Krishna Deshpande, Ajoy Mondal, C. V. Jawahar",
+                year: 2025,
+                link: "https://doi.org/10.1145/3774521.3774533",
+                pdf: "https://doi.org/10.1145/3774521.3774533",
+                bibtex: "@inproceedings{manna2025labelfree,\\n  title={Label-Free Adaptation of Indic Printed OCR},\\n  author={Manna, Akash and Deshpande, Radha Krishna and Mondal, Ajoy and Jawahar, C. V.},\\n  booktitle={Proceedings of the Sixteenth Indian Conference on Computer Vision, Graphics and Image Processing},\\n  year={2025},\\n  doi={10.1145/3774521.3774533}\\n}"
+            }
         ];
 
         const TECHNOLOGIES = [
@@ -433,7 +427,7 @@
                                         <h3 className="text-xl font-bold text-gray-100 group-hover:text-neon-blue transition-colors">
                                             {pub.title}
                                         </h3>
-                                        <a href="#" className="text-gray-500 hover:text-white transition-colors">
+                                        <a href={pub.link || pub.pdf || "#"} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">
                                             <Icon name="external-link" size={18} />
                                         </a>
                                     </div>
@@ -454,9 +448,11 @@
                                         >
                                             <Icon name="copy" size={12} /> Copy BibTeX
                                         </button>
-                                        <button className="flex items-center gap-2 text-xs font-mono border border-gray-700 hover:bg-white hover:text-black hover:border-white px-4 py-2 rounded transition-all bg-deep-bg">
-                                            PDF
-                                        </button>
+                                        {pub.pdf && (
+                                            <a href={pub.pdf} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs font-mono border border-gray-700 hover:bg-white hover:text-black hover:border-white px-4 py-2 rounded transition-all bg-deep-bg">
+                                                PDF
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
                             </div>
